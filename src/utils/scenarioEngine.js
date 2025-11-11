@@ -24,7 +24,10 @@ function buildMonthlySeries({
   let customers = startCustomers;
 
   for (let m = 1; m <= months; m++) {
-    const newCustomers = monthlySMBudget > 0 && cac > 0 ? Math.max(0, Math.round(monthlySMBudget / cac)) : Math.round(startCustomers / months);
+    const newCustomers =
+      monthlySMBudget > 0 && cac > 0
+        ? Math.max(0, Math.round(monthlySMBudget / cac))
+        : Math.round(startCustomers / months);
     const churned = Math.round(customers * clamp(churnMonthly, 0, 0.9));
     customers = Math.max(0, customers - churned + newCustomers);
     const mrr = Math.round(customers * arpa);
@@ -83,14 +86,24 @@ export function buildScenariosFromInputs({
 
   // Metrics summary
   const lifetimeHealthy = 1 / healthy.churn;
-  const ltvHealthy = calculateLTV(healthy.arpa, healthy.grossMargin, lifetimeHealthy);
+  const ltvHealthy = calculateLTV(
+    healthy.arpa,
+    healthy.grossMargin,
+    lifetimeHealthy
+  );
   const ltvCacHealthy = calculateLTVCACRatio(ltvHealthy, healthy.cac);
-  const paybackHealthy = calculatePaybackPeriod(healthy.cac, healthy.arpa * healthy.grossMargin);
+  const paybackHealthy = calculatePaybackPeriod(
+    healthy.cac,
+    healthy.arpa * healthy.grossMargin
+  );
 
   const lifetimeRisk = 1 / risk.churn;
   const ltvRisk = calculateLTV(risk.arpa, risk.grossMargin, lifetimeRisk);
   const ltvCacRisk = calculateLTVCACRatio(ltvRisk, risk.cac);
-  const paybackRisk = calculatePaybackPeriod(risk.cac, risk.arpa * risk.grossMargin);
+  const paybackRisk = calculatePaybackPeriod(
+    risk.cac,
+    risk.arpa * risk.grossMargin
+  );
 
   return {
     healthy: {
@@ -135,5 +148,3 @@ export function buildScenariosFromInputs({
     },
   };
 }
-
-

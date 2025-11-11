@@ -76,7 +76,9 @@ const IdeaReview = () => {
       const churnMonthly = (parseFloat(formData.churnPct) || 3) / 100;
       const cacEstimate = metrics.estimatedCAC || 18;
       const monthlySMBudget = parseFloat(formData.marketingBudget) || 800;
-      const { buildScenariosFromInputs } = await import("../utils/scenarioEngine.js");
+      const { buildScenariosFromInputs } = await import(
+        "../utils/scenarioEngine.js"
+      );
       const built = buildScenariosFromInputs({
         arpa,
         grossMargin,

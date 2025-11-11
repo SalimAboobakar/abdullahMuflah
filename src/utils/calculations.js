@@ -58,7 +58,11 @@ export const lifetimeFromChurn = (churnMonthly) => {
  * Composite health score in [0,1]
  * weights: LTV/CAC (50%), Payback (30%), Churn (20%)
  */
-export const compositeHealthScore = ({ ltvToCac, paybackMonths, churnMonthly }) => {
+export const compositeHealthScore = ({
+  ltvToCac,
+  paybackMonths,
+  churnMonthly,
+}) => {
   const a = Math.min(1, ltvToCac / 3); // >= 3 is healthy
   const b = Math.min(1, 4 / Math.max(0.5, paybackMonths)); // <= 4 months is healthy
   const c = Math.min(1, Math.max(0, (0.05 - Math.max(0, churnMonthly)) / 0.05)); // 5% threshold
@@ -92,12 +96,19 @@ export const calculateMRR = (customers, arpa) => {
  * @returns {object} Estimated metrics
  */
 export const estimateMetricsFromIdea = (formData) => {
-  const { pricing, expectedCustomers, operatingCost, marketingBudget, grossMarginPct, churnPct } =
-    formData;
+  const {
+    pricing,
+    expectedCustomers,
+    operatingCost,
+    marketingBudget,
+    grossMarginPct,
+    churnPct,
+  } = formData;
 
   // Simple estimation logic for Dhofar market
   const estimatedCAC = marketingBudget / Math.max(1, expectedCustomers * 0.7); // Assuming 70% conversion funnel
-  const grossMargin = typeof grossMarginPct === "number" ? grossMarginPct / 100 : 0.75; // Typical SaaS gross margin
+  const grossMargin =
+    typeof grossMarginPct === "number" ? grossMarginPct / 100 : 0.75; // Typical SaaS gross margin
   const churnMonthly = typeof churnPct === "number" ? churnPct / 100 : 0.03; // Default 3%
   const avgLifetimeMonths = lifetimeFromChurn(churnMonthly) || 18; // Derive from churn if provided
   const estimatedLTV = pricing * grossMargin * avgLifetimeMonths;

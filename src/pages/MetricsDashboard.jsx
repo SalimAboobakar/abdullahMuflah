@@ -55,7 +55,8 @@ const MetricsDashboard = () => {
         <div className="page-header">
           <h1>مقاييس SaaS المباشرة</h1>
           <p className="page-description">
-            تحليل سيناريوهات في الوقت الفعلي: مقارنة سيناريو صحي مقابل سيناريو معرّض للخطر لسوق ظفار.
+            تحليل سيناريوهات في الوقت الفعلي: مقارنة سيناريو صحي مقابل سيناريو
+            معرّض للخطر لسوق ظفار.
           </p>
           <p className="prototype-label">Simulated data - Front-end demo</p>
         </div>
@@ -105,7 +106,9 @@ const MetricsDashboard = () => {
           <KpiBox
             label="نسبة LTV/CAC"
             value={`${currentScenario.metrics.ltvCacRatio}x`}
-            subtitle={currentScenario.metrics.ltvCacRatio >= 3 ? "صحي" : "يحتاج تحسين"}
+            subtitle={
+              currentScenario.metrics.ltvCacRatio >= 3 ? "صحي" : "يحتاج تحسين"
+            }
             tooltip={tooltips.ltvCac}
             variant={
               currentScenario.metrics.ltvCacRatio >= 3 ? "success" : "danger"
@@ -123,7 +126,9 @@ const MetricsDashboard = () => {
           <KpiBox
             label="فترة الاسترداد"
             value={`${currentScenario.metrics.paybackPeriod} mo`}
-            subtitle={currentScenario.metrics.paybackPeriod < 12 ? "جيد" : "طويلة"}
+            subtitle={
+              currentScenario.metrics.paybackPeriod < 12 ? "جيد" : "طويلة"
+            }
             tooltip={tooltips.payback}
             variant={
               currentScenario.metrics.paybackPeriod < 12 ? "success" : "warning"
@@ -161,8 +166,16 @@ const MetricsDashboard = () => {
                 {/* Gradient area under line */}
                 <defs>
                   <linearGradient id="mrrGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={isHealthy ? "#0FE2B4" : "#FF4B61"} stopOpacity={0.6} />
-                    <stop offset="100%" stopColor={isHealthy ? "#0FE2B4" : "#FF4B61"} stopOpacity={0} />
+                    <stop
+                      offset="0%"
+                      stopColor={isHealthy ? "#0FE2B4" : "#FF4B61"}
+                      stopOpacity={0.6}
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor={isHealthy ? "#0FE2B4" : "#FF4B61"}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
                 <Line
@@ -205,8 +218,18 @@ const MetricsDashboard = () => {
                   labelStyle={{ color: "#DDDDE3" }}
                 />
                 <Legend wrapperStyle={{ color: "#9A9FB5" }} />
-                <Bar dataKey="newCustomers" name="عملاء جدد" fill="#329FBA" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="churned" name="عملاء مفقودون" fill="#FF4B61" radius={[8, 8, 0, 0]} />
+                <Bar
+                  dataKey="newCustomers"
+                  name="عملاء جدد"
+                  fill="#329FBA"
+                  radius={[8, 8, 0, 0]}
+                />
+                <Bar
+                  dataKey="churned"
+                  name="عملاء مفقودون"
+                  fill="#FF4B61"
+                  radius={[8, 8, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -260,7 +283,7 @@ const MetricsDashboard = () => {
           } fade-in`}
         >
           <h3 className="insights-title">
-             {isHealthy ? "✓ أهم الملاحظات" : "⚠ عوامل الخطر"}
+            {isHealthy ? "✓ أهم الملاحظات" : "⚠ عوامل الخطر"}
           </h3>
           <ul className="insights-list">
             {currentScenario.insights.map((insight, index) => (
