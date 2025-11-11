@@ -1,0 +1,166 @@
+.landing {
+  flex: 1;
+}
+
+/* Hero Section */
+.hero {
+  padding: 6rem 0;
+  background: linear-gradient(
+    180deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-glow);
+  object-fit: cover;
+}
+
+.hero-title {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-lg);
+  font-weight: 500;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-2xl);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: var(--spacing-lg);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Features Section */
+.features {
+  padding: 4rem 0;
+  background: var(--bg-primary);
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  color: var(--text-main);
+}
+
+.feature-card {
+  text-align: center;
+}
+
+.feature-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-icon-teal {
+  color: var(--accent-teal);
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 20px rgba(15, 226, 180, 0.2);
+}
+
+.feature-icon-cyan {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(50, 159, 186, 0.2);
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-md);
+}
+
+.feature-description {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Journey Section */
+.journey-section {
+  padding: 4rem 0;
+  background: var(--bg-primary);
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 6rem 0;
+  background: linear-gradient(
+    180deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+}
+
+.cta-content {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-main);
+}
+
+.cta-description {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-2xl);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 0;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .hero-logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cta-title {
+    font-size: 2rem;
+  }
+}

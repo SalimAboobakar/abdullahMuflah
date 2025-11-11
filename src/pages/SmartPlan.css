@@ -1,0 +1,264 @@
+.smart-plan {
+  padding: 4rem 0;
+  min-height: calc(100vh - 200px);
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.header-actions .btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.plan-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.section-title {
+  font-size: 2rem;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-sm);
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* SWOT Grid */
+.swot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-xl);
+}
+
+.swot-item {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+}
+
+.swot-strengths {
+  border-left: 3px solid var(--success);
+}
+
+.swot-weaknesses {
+  border-left: 3px solid var(--warning);
+}
+
+.swot-opportunities {
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.swot-threats {
+  border-left: 3px solid var(--danger);
+}
+
+.swot-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-main);
+}
+
+.swot-icon {
+  flex-shrink: 0;
+}
+
+.swot-strengths .swot-icon {
+  color: var(--success);
+}
+
+.swot-weaknesses .swot-icon {
+  color: var(--warning);
+}
+
+.swot-opportunities .swot-icon {
+  color: var(--accent-cyan);
+}
+
+.swot-threats .swot-icon {
+  color: var(--danger);
+}
+
+.swot-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.swot-list li {
+  padding-left: var(--spacing-md);
+  position: relative;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.swot-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent-teal);
+}
+
+/* Business Model Canvas */
+.bmc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.bmc-item {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.bmc-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-teal);
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.bmc-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.bmc-list li {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding-left: var(--spacing-sm);
+  position: relative;
+}
+
+.bmc-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent-cyan);
+  font-size: 0.75rem;
+}
+
+/* Financial Projection */
+.financial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.year-card {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+  transition: all var(--transition-normal);
+}
+
+.year-card:hover {
+  border-color: var(--accent-teal);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.year-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.year-title {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.year-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.year-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.year-metric-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.year-metric-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.year-profit {
+  color: var(--success);
+  font-size: 1.25rem;
+}
+
+.financial-notes {
+  padding: var(--spacing-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(15, 226, 180, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.financial-notes strong {
+  color: var(--accent-teal);
+}
+
+@media (max-width: 1024px) {
+  .bmc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .financial-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .swot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bmc-grid {
+    grid-template-columns: 1fr;
+  }
+}

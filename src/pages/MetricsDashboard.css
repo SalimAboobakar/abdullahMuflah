@@ -1,0 +1,149 @@
+.metrics-dashboard {
+  padding: 4rem 0;
+  min-height: calc(100vh - 200px);
+}
+
+.scenario-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.scenario-card {
+  margin-bottom: var(--spacing-2xl);
+  border: 1px solid rgba(15, 226, 180, 0.2);
+}
+
+.scenario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.scenario-header h2 {
+  margin: 0;
+  color: var(--text-main);
+}
+
+.scenario-region {
+  padding: 0.5rem 1rem;
+  background: rgba(15, 226, 180, 0.1);
+  border: 1px solid rgba(15, 226, 180, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--accent-teal);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.scenario-description {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.chart-card {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-title {
+  font-size: 1.125rem;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-lg);
+  font-weight: 600;
+}
+
+/* Insights Card */
+.insights-card {
+  background: var(--bg-secondary);
+}
+
+.insights-success {
+  border: 1px solid rgba(15, 226, 180, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 226, 180, 0.05),
+    rgba(15, 226, 180, 0.02)
+  );
+}
+
+.insights-danger {
+  border: 1px solid rgba(255, 75, 97, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 75, 97, 0.05),
+    rgba(255, 75, 97, 0.02)
+  );
+}
+
+.insights-title {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-lg);
+}
+
+.insights-success .insights-title {
+  color: var(--success);
+}
+
+.insights-danger .insights-title {
+  color: var(--danger);
+}
+
+.insights-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.insight-item {
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1024px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
