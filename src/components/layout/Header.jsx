@@ -28,6 +28,9 @@ const Header = () => {
             <Link to="/mentors-deck" className="nav-link">
               المرشدون
             </Link>
+            <Link to="/pricing" className="nav-link nav-link-subscribe">
+              الاشتراك
+            </Link>
           </nav>
         </div>
       </div>
