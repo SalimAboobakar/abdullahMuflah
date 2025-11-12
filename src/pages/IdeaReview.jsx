@@ -22,6 +22,7 @@ const IdeaReview = () => {
   const [formData, setFormData] = useState({
     startupName: "",
     targetCustomers: "",
+    businessType: "SaaS",
     pricing: "",
     expectedCustomers: "",
     operatingCost: "",
@@ -29,6 +30,9 @@ const IdeaReview = () => {
     grossMarginPct: 75,
     churnPct: 3,
     segment: "B2B",
+    aov: "", // Average order/value per transaction (for غير SaaS)
+    opm: "", // Orders per customer per month (لغير SaaS)
+    takeRatePct: 100, // لماركيت بليس/عمولات
   });
   const [results, setResults] = useState(null);
   const [scenarioPack, setScenarioPack] = useState(null);
@@ -51,8 +55,16 @@ const IdeaReview = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Calculate metrics
+    // اشتقاق ARPA بحسب نوع النشاط
+    const isSaaS = formData.businessType === "SaaS";
+    const effectiveARPA = isSaaS
+      ? parseFloat(formData.pricing)
+      : parseFloat(formData.aov || 0) *
+          parseFloat(formData.opm || 0) *
+          (parseFloat(formData.takeRatePct || 100) / 100) || 0;
+
     const numericData = {
-      pricing: parseFloat(formData.pricing),
+      pricing: effectiveARPA,
       expectedCustomers: parseFloat(formData.expectedCustomers),
       operatingCost: parseFloat(formData.operatingCost),
       marketingBudget: parseFloat(formData.marketingBudget),
@@ -71,7 +83,7 @@ const IdeaReview = () => {
 
     // Build scenario pack from inputs (front-end only)
     try {
-      const arpa = parseFloat(formData.pricing) || 50;
+      const arpa = effectiveARPA || 50;
       const grossMargin = (parseFloat(formData.grossMarginPct) || 75) / 100;
       const churnMonthly = (parseFloat(formData.churnPct) || 3) / 100;
       const cacEstimate = metrics.estimatedCAC || 18;
@@ -127,6 +139,21 @@ const IdeaReview = () => {
           <Card className="review-form-card fade-in">
             <form onSubmit={handleSubmit} className="review-form">
               <div className="form-group">
+                <label className="form-label">نوع النشاط</label>
+                <select
+                  name="businessType"
+                  className="form-select"
+                  value={formData.businessType}
+                  onChange={handleChange}
+                >
+                  <option value="SaaS">SaaS (اشتراكات برمجية)</option>
+                  <option value="Services">خدمات</option>
+                  <option value="Ecommerce">متجر إلكتروني</option>
+                  <option value="Marketplace">سوق/وسيط (Marketplace)</option>
+                </select>
+              </div>
+
+              <div className="form-group">
                 <label className="form-label">اسم الشركة الناشئة</label>
                 <input
                   type="text"
@@ -154,7 +181,9 @@ const IdeaReview = () => {
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">
-                    التسعير الشهري (ريال عماني)
+                    {formData.businessType === "SaaS"
+                      ? "التسعير الشهري (ريال عماني)"
+                      : "سعر الاشتراك/الإيراد الشهري لكل عميل (سيُشتق آلياً من الحقول أدناه)"}
                   </label>
                   <input
                     type="number"
@@ -163,9 +192,9 @@ const IdeaReview = () => {
                     placeholder="مثال: 50"
                     value={formData.pricing}
                     onChange={handleChange}
-                    min="1"
+                    min="0"
                     step="0.1"
-                    required
+                    disabled={formData.businessType !== "SaaS"}
                   />
                 </div>
 
@@ -185,6 +214,61 @@ const IdeaReview = () => {
                   />
                 </div>
               </div>
+
+              {formData.businessType !== "SaaS" && (
+                <>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">
+                        متوسط قيمة الطلب/الخدمة (OMR)
+                      </label>
+                      <input
+                        type="number"
+                        name="aov"
+                        className="form-input"
+                        placeholder="مثال: 20"
+                        value={formData.aov}
+                        onChange={handleChange}
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">
+                        عدد الطلبات للعميل شهرياً
+                      </label>
+                      <input
+                        type="number"
+                        name="opm"
+                        className="form-input"
+                        placeholder="مثال: 1.5"
+                        value={formData.opm}
+                        onChange={handleChange}
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">
+                        نسبة العمولة/Take rate (%)
+                      </label>
+                      <input
+                        type="number"
+                        name="takeRatePct"
+                        className="form-input"
+                        placeholder="100 للمتاجر/الخدمات، 10–20 للسوق"
+                        value={formData.takeRatePct}
+                        onChange={handleChange}
+                        min="1"
+                        max="100"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="form-row">
                 <div className="form-group">

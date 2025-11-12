@@ -17,16 +17,19 @@ import KpiBox from "../components/common/KpiBox";
 import ScenarioStatus from "../components/common/ScenarioStatus";
 import { successfulScenario, atRiskScenario } from "../data/mockData";
 import { formatOMR, formatPercentage } from "../utils/calculations";
+import { buildScenariosFromInputs } from "../utils/scenarioEngine";
 import "./MetricsDashboard.css";
 
 const MetricsDashboard = () => {
   const location = useLocation();
   const override = location.state?.scenarioPack;
+  const [pack, setPack] = useState(override || null);
   const [isHealthy, setIsHealthy] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const healthyScenario = override?.healthy || successfulScenario;
-  const riskScenario = override?.risk || atRiskScenario;
+  const healthyScenario =
+    pack?.healthy || override?.healthy || successfulScenario;
+  const riskScenario = pack?.risk || override?.risk || atRiskScenario;
   const currentScenario = isHealthy ? healthyScenario : riskScenario;
 
   const handleScenarioToggle = async () => {
@@ -40,13 +43,80 @@ const MetricsDashboard = () => {
   };
 
   // Tooltips for KPI boxes
+  // Tooltips بصيغ رقمية حيّة
+  const last = currentScenario.monthlyData?.[11];
+  const first = currentScenario.monthlyData?.[0];
+  const arpaVal = currentScenario.metrics.arpa || 0;
+  const gmVal = (currentScenario.metrics.grossMargin || 0) / 100;
+  const churnMonthly = (currentScenario.metrics.avgChurn || 0) / 100;
+  const lifetime = churnMonthly > 0 ? +(1 / churnMonthly).toFixed(1) : 0;
+  const ltvDynamic = +(arpaVal * gmVal * (lifetime || 0)).toFixed(1);
   const tooltips = {
-    mrr: "الإيراد الشهري المتكرر = العملاء النشطون × ARPA",
-    ltv: "LTV = ARPA × هامش الربح × متوسط العمر (بالشهور)",
-    cac: "CAC = إنفاق التسويق والمبيعات ÷ العملاء الجدد",
-    ltvCac: "صحي إذا كانت LTV/CAC ≥ 3",
-    churn: "التسرب الشهري = العملاء المفقودون ÷ إجمالي العملاء × 100",
-    payback: "فترة الاسترداد = CAC ÷ الربح الشهري الإجمالي للعميل",
+    mrr: `MRR = العملاء × ARPA = ${last?.customers ?? "-"} × ${formatOMR(
+      arpaVal
+    )} → ${formatOMR(last?.mrr ?? 0)}`,
+    ltv: `LTV = ARPA × هامش الربح × العمر = ${formatOMR(arpaVal)} × ${(
+      gmVal * 100
+    ).toFixed(0)}% × ${lifetime} = ${formatOMR(ltvDynamic)}`,
+    cac: `CAC = إنفاق التسويق والمبيعات ÷ العملاء الجدد`,
+    ltvCac: `LTV/CAC = ${formatOMR(currentScenario.metrics.ltv)} ÷ ${formatOMR(
+      currentScenario.metrics.cac
+    )}`,
+    churn: `التسرب الشهري ≈ ${currentScenario.metrics.avgChurn}% ⇒ العمر ≈ ${lifetime} شهر`,
+    payback: `الاسترداد = CAC ÷ (ARPA × هامش الربح) = ${formatOMR(
+      currentScenario.metrics.cac
+    )} ÷ ${formatOMR(arpaVal * gmVal)} ≈ ${
+      currentScenario.metrics.paybackPeriod
+    } أشهر`,
+  };
+
+  // What-if controls
+  const [whatIfOpen, setWhatIfOpen] = useState(false);
+  const [adjustments, setAdjustments] = useState({
+    arpaDelta: 0, // %
+    cacDelta: 0, // %
+    churnDelta: 0, // absolute percentage points
+    smbDelta: 0, // %
+  });
+
+  const applyWhatIf = async () => {
+    setIsLoading(true);
+    // Get base (from healthy scenario metrics if available)
+    const base = healthyScenario;
+    const baseArpa = base?.metrics?.arpa ?? 50;
+    const baseGM = (base?.metrics?.grossMargin ?? 75) / 100;
+    const baseChurn = (base?.metrics?.avgChurn ?? 3) / 100;
+    const baseCac = base?.metrics?.cac ?? 18;
+    // approximate monthly S&M budget from data if available
+    const avgNew = Array.isArray(base?.monthlyData)
+      ? Math.max(
+          1,
+          Math.round(
+            base.monthlyData.reduce((s, m) => s + (m.newCustomers ?? 1), 0) /
+              base.monthlyData.length
+          )
+        )
+      : 10;
+    const approxSMBudget = avgNew * baseCac;
+
+    const arpa = baseArpa * (1 + adjustments.arpaDelta / 100);
+    const cac = baseCac * (1 + adjustments.cacDelta / 100);
+    const churn = Math.max(0.001, baseChurn + adjustments.churnDelta / 100);
+    const smb = approxSMBudget * (1 + adjustments.smbDelta / 100);
+
+    // Rebuild scenarios using engine
+    const rebuilt = buildScenariosFromInputs({
+      arpa,
+      grossMargin: baseGM,
+      monthlyChurn: churn,
+      cacEstimate: cac,
+      startCustomers: base?.monthlyData?.[0]?.customers ?? 6,
+      monthlySMBudget: smb,
+    });
+    // Simulate brief recalculation
+    await new Promise((r) => setTimeout(r, 600));
+    setPack(rebuilt);
+    setIsLoading(false);
   };
 
   return (
@@ -60,6 +130,91 @@ const MetricsDashboard = () => {
           </p>
           <p className="prototype-label">Simulated data - Front-end demo</p>
         </div>
+
+        {/* What-if controls */}
+        <Card
+          className="scenario-card fade-in"
+          style={{ marginBottom: "1rem" }}
+        >
+          <div className="scenario-header" style={{ marginBottom: 0 }}>
+            <h3 style={{ margin: 0 }}>ماذا لو؟ (What-if)</h3>
+            <button
+              className="btn btn-outline"
+              onClick={() => setWhatIfOpen(!whatIfOpen)}
+            >
+              {whatIfOpen ? "إخفاء" : "إظهار"}
+            </button>
+          </div>
+          {whatIfOpen && (
+            <div className="grid grid-cols-4" style={{ marginTop: "1rem" }}>
+              <div>
+                <div className="form-label">تغيير ARPA %</div>
+                <input
+                  className="form-input"
+                  type="number"
+                  value={adjustments.arpaDelta}
+                  onChange={(e) =>
+                    setAdjustments({
+                      ...adjustments,
+                      arpaDelta: parseFloat(e.target.value || 0),
+                    })
+                  }
+                  step="1"
+                />
+              </div>
+              <div>
+                <div className="form-label">تغيير CAC %</div>
+                <input
+                  className="form-input"
+                  type="number"
+                  value={adjustments.cacDelta}
+                  onChange={(e) =>
+                    setAdjustments({
+                      ...adjustments,
+                      cacDelta: parseFloat(e.target.value || 0),
+                    })
+                  }
+                  step="1"
+                />
+              </div>
+              <div>
+                <div className="form-label">تغيير التسرب (نقاط مئوية)</div>
+                <input
+                  className="form-input"
+                  type="number"
+                  value={adjustments.churnDelta}
+                  onChange={(e) =>
+                    setAdjustments({
+                      ...adjustments,
+                      churnDelta: parseFloat(e.target.value || 0),
+                    })
+                  }
+                  step="0.1"
+                />
+              </div>
+              <div>
+                <div className="form-label">تغيير ميزانية التسويق %</div>
+                <input
+                  className="form-input"
+                  type="number"
+                  value={adjustments.smbDelta}
+                  onChange={(e) =>
+                    setAdjustments({
+                      ...adjustments,
+                      smbDelta: parseFloat(e.target.value || 0),
+                    })
+                  }
+                  step="5"
+                />
+              </div>
+              <div className="flex" style={{ alignItems: "flex-end" }}>
+                <button className="btn btn-primary" onClick={applyWhatIf}>
+                  تطبيق
+                </button>
+              </div>
+            </div>
+          )}
+        </Card>
 
         {/* Scenario Toggle */}
         <div className="scenario-toggle-wrapper">
